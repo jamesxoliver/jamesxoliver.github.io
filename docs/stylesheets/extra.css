@@ -89,8 +89,14 @@
   font-size: 0.72rem;
 }
 
-/* Hide site name in header */
+/* Hide site name everywhere (header + sidebar) */
 .md-header__topic .md-ellipsis {
+  display: none;
+}
+.md-nav--primary > .md-nav__title {
+  display: none;
+}
+.md-logo {
   display: none;
 }
 
