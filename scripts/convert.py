@@ -191,11 +191,20 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
     # Remove the first section heading — redundant after the title block
     md = re.sub(r"^## .+\n+", "", md, count=1)
 
-    # Ensure display math ($$...$$) is on its own lines for MathJax/arithmatex
+    # Ensure display math ($$...$$) blocks are in their own paragraphs for arithmatex.
+    # Arithmatex requires blank lines before/after the $$...$$ block.
+    # First, normalize: ensure $$ is on its own line
     md = re.sub(r"(?<!\n)\$\$", "\n$$", md)
     md = re.sub(r"\$\$(?!\n)", "$$\n", md)
+    # Now match complete $$\n...\n$$ blocks and wrap with blank lines
+    md = re.sub(
+        r"\n?\$\$\n(.*?)\n\$\$\n?",
+        r"\n\n$$\n\1\n$$\n\n",
+        md,
+        flags=re.DOTALL,
+    )
 
-    # Clean up any triple+ newlines created by the above
+    # Clean up excessive newlines
     md = re.sub(r"\n{3,}", "\n\n", md)
 
     # Extract meta description from first paragraph

@@ -77,10 +77,12 @@
   margin-top: 0.2em;
 }
 
-/* Tables — don't stretch full width */
+/* Tables — centered, don't stretch full width */
 .md-typeset table:not([class]) {
   display: table;
   max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 0.82rem;
 }
 
