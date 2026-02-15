@@ -16,7 +16,7 @@ def main():
     nav_essays = nav_data.get("nav_essays", [])
 
     config = {
-        "site_name": "James Oliver",
+        "site_name": "Finding simplicity in complexity",
         "site_url": "https://jamesxoliver.github.io",
         "site_description": "Finding simplicity in complexity",
         "theme": {
@@ -42,9 +42,9 @@ def main():
             "font": {"text": "Inter", "code": "JetBrains Mono"},
             "features": [
                 "navigation.sections",
-                "navigation.expand",
                 "search.suggest",
                 "search.highlight",
+                "toc.integrate",
             ],
         },
         "nav": [
@@ -59,6 +59,10 @@ def main():
             "pymdownx.details",
             "attr_list",
             "md_in_html",
+            {"toc": {"permalink": True}},
+        ],
+        "extra_css": [
+            "stylesheets/extra.css",
         ],
         "extra_javascript": [
             "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"

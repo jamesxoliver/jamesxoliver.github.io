@@ -122,7 +122,23 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
 
     header += "\n"
 
-    # Clean up some common pandoc artifacts
+    # Clean up pandoc artifacts
+    md = re.sub(r"\n{3,}", "\n\n", md)
+
+    # Remove {#id .unnumbered} heading attributes
+    md = re.sub(r"\s*\{#[^}]*\}", "", md)
+
+    # Remove tcolorbox/LaTeX environment wrappers
+    md = re.sub(r"^:{2,}\s*tcolorbox\s*$", "", md, flags=re.MULTILINE)
+    md = re.sub(r"^:{2,}\s*$", "", md, flags=re.MULTILINE)
+
+    # Clean up raw citation references [@key] -> remove brackets
+    md = re.sub(r"\[@([a-zA-Z0-9_]+)\]", "", md)
+
+    # Remove leftover \\ line breaks from LaTeX
+    md = re.sub(r"\\\\\s*$", "", md, flags=re.MULTILINE)
+
+    # Clean up multiple blank lines again after removals
     md = re.sub(r"\n{3,}", "\n\n", md)
 
     return header + "\n---\n\n" + md + "\n"
@@ -207,6 +223,7 @@ def main():
 
     # essay_tree: {top_category: {subcategory_or_None: [(title, path)]}}
     essay_tree = {}
+    seen_titles = {}  # title -> list of file slugs (for duplicate detection)
     converted = 0
     failed = 0
 
@@ -235,6 +252,13 @@ def main():
             continue
 
         subtitle = extract_subtitle(tex_content)
+
+        # Track duplicate titles — disambiguate with filename
+        file_slug_for_title = slug(tex_file.name)
+        if title in seen_titles:
+            seen_titles[title].append(file_slug_for_title)
+        else:
+            seen_titles[title] = [file_slug_for_title]
 
         # Get git dates
         published, updated = get_git_dates(rel)
@@ -282,6 +306,35 @@ def main():
         converted += 1
 
     print(f"\nConverted: {converted}, Failed: {failed}")
+
+    # Disambiguate duplicate titles in essay_tree
+    # Collect all (title, path) pairs across the entire tree
+    all_titles = []
+    for top_cat in essay_tree:
+        for sub_cat in essay_tree[top_cat]:
+            for title, path in essay_tree[top_cat][sub_cat]:
+                all_titles.append(title)
+    title_counts = {}
+    for t in all_titles:
+        title_counts[t] = title_counts.get(t, 0) + 1
+    dupes = {t for t, c in title_counts.items() if c > 1}
+
+    if dupes:
+        print(f"Disambiguating {len(dupes)} duplicate titles: {dupes}")
+        for top_cat in essay_tree:
+            for sub_cat in essay_tree[top_cat]:
+                new_items = []
+                for title, path in essay_tree[top_cat][sub_cat]:
+                    if title in dupes:
+                        # Append the filename (without extension) to disambiguate
+                        fname = Path(path).stem
+                        # Convert slug back to readable: "glucose1" -> "Glucose1"
+                        readable = fname.replace("-", " ").title()
+                        new_title = f"{title} ({readable})"
+                        new_items.append((new_title, path))
+                    else:
+                        new_items.append((title, path))
+                essay_tree[top_cat][sub_cat] = new_items
 
     # Write nav fragment for mkdocs.yml
     nav_essays = build_nav(essay_tree)
