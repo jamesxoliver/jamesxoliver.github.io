@@ -109,8 +109,33 @@ def extract_first_paragraph(md_content: str) -> str:
     return ""
 
 
+def estimate_reading_time(md_content: str) -> int:
+    """Estimate reading time in minutes from markdown content."""
+    # Strip markdown formatting for word count
+    text = re.sub(r"\$\$[^$]*\$\$", " equation ", md_content)  # display math
+    text = re.sub(r"\$[^$]+\$", " equation ", text)  # inline math
+    text = re.sub(r"!\[.*?\]\(.*?\)", "", text)  # images
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)  # links
+    text = re.sub(r"[#*_`~>|]", "", text)  # markdown chars
+    text = re.sub(r"-{3,}", "", text)  # horizontal rules
+    words = len(text.split())
+    minutes = max(1, round(words / 200))
+    return minutes
+
+
+def extract_related_essays(tex_content: str) -> list[str]:
+    """Extract related essay slugs from \\RelatedEssays{slug1, slug2}."""
+    match = re.search(r"\\RelatedEssays\{(.+?)\}", tex_content)
+    if match:
+        slugs = [s.strip() for s in match.group(1).split(",") if s.strip()]
+        return slugs
+    return []
+
+
 def clean_md(md_content: str, title: str, subtitle: str | None,
-             published: str | None = None, updated: str | None = None) -> str:
+             published: str | None = None, updated: str | None = None,
+             related_slugs: list[str] | None = None,
+             slug_to_info: dict | None = None) -> str:
     """Clean up pandoc output for MkDocs."""
     lines = md_content.split("\n")
     cleaned = []
@@ -148,6 +173,9 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
     if not description and subtitle:
         description = subtitle
 
+    # Reading time
+    reading_time = estimate_reading_time(md)
+
     # Build YAML front matter for SEO
     front_matter = "---\n"
     # Escape quotes in description/title for YAML
@@ -169,11 +197,25 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
         date_line = f"Published: {published}"
         if updated and updated != published:
             date_line += f" · Updated: {updated}"
+        date_line += f" · {reading_time} min read"
         header += f"  \n<small>{date_line}</small>"
+    else:
+        header += f"  \n<small>{reading_time} min read</small>"
 
     header += "\n"
 
-    return front_matter + header + "\n---\n\n" + md + "\n"
+    # Build "See also" section from related essays
+    see_also = ""
+    if related_slugs and slug_to_info:
+        links = []
+        for rs in related_slugs:
+            if rs in slug_to_info:
+                info = slug_to_info[rs]
+                links.append(f"[{info['title']}](/{info['path']})")
+        if links:
+            see_also = "\n\n---\n\n**See also:** " + " · ".join(links) + "\n"
+
+    return front_matter + header + "\n---\n\n" + md + see_also + "\n"
 
 
 def slug(name: str) -> str:
@@ -255,82 +297,101 @@ def main():
         shutil.rmtree(DOCS_DIR)
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # essay_tree: {top_category: {subcategory_or_None: [(title, path)]}}
-    essay_tree = {}
-    seen_titles = {}  # title -> list of file slugs (for duplicate detection)
-    converted = 0
-    failed = 0
-
     # Rename map for cleaner display of top-level dirs
     RENAME = {"1_Foundations": "Foundations"}
+
+    # --- Pass 1: collect metadata for all essays (needed for cross-links) ---
+    essays = []  # list of dicts with all metadata
+    slug_to_info = {}  # file_slug -> {title, path} for related-essay lookups
 
     for tex_file in sorted(PAPERS_DIR.rglob("*.tex")):
         rel = tex_file.relative_to(PAPERS_DIR)
         parts = rel.parts
 
-        # Skip format/template files
         if parts[0] in SKIP_DIRS:
             continue
         if "template" in tex_file.name.lower():
             continue
 
-        print(f"Converting: {rel}")
-
         tex_content = tex_file.read_text(errors="replace")
 
-        # Extract metadata
         title = extract_title(tex_content)
         if not title or title == "Title":
-            print(f"  Skipping (no title): {rel}")
-            failed += 1
             continue
 
         subtitle = extract_subtitle(tex_content)
+        related_slugs = extract_related_essays(tex_content)
+        published, updated = get_git_dates(rel)
 
-        # Track duplicate titles — disambiguate with filename
-        file_slug_for_title = slug(tex_file.name)
+        top_category = RENAME.get(parts[0], parts[0])
+        sub_category = None
+        if len(parts) > 2:
+            sub_category = parts[1]
+
+        file_slug_val = slug(tex_file.name)
+        top_slug = slug(top_category)
+        if sub_category:
+            sub_slug = slug(sub_category)
+            nav_path = f"essays/{top_slug}/{sub_slug}/{file_slug_val}.md"
+        else:
+            nav_path = f"essays/{top_slug}/{file_slug_val}.md"
+
+        info = {
+            "tex_file": tex_file,
+            "rel": rel,
+            "title": title,
+            "subtitle": subtitle,
+            "published": published,
+            "updated": updated,
+            "top_category": top_category,
+            "sub_category": sub_category,
+            "file_slug": file_slug_val,
+            "nav_path": nav_path,
+            "related_slugs": related_slugs,
+        }
+        essays.append(info)
+        slug_to_info[file_slug_val] = {"title": title, "path": nav_path}
+
+    # --- Pass 2: convert and write ---
+    essay_tree = {}
+    seen_titles = {}
+    converted = 0
+    failed = 0
+
+    for info in essays:
+        print(f"Converting: {info['rel']}")
+
+        file_slug_for_title = info["file_slug"]
+        title = info["title"]
         if title in seen_titles:
             seen_titles[title].append(file_slug_for_title)
         else:
             seen_titles[title] = [file_slug_for_title]
 
-        # Get git dates
-        published, updated = get_git_dates(rel)
-
-        # Determine category hierarchy from directory structure
-        top_category = RENAME.get(parts[0], parts[0])
-        sub_category = None
-        if len(parts) > 2:
-            # Has a subcategory folder
-            sub_category = parts[1]
-            # Handle deep nesting (e.g. Health/Metabolism/01_theory/...)
-            # Collapse to just the first subcategory level
-            if len(parts) > 3:
-                sub_category = parts[1]
-
-        # Convert
-        md_content = tex_to_md(tex_file)
+        md_content = tex_to_md(info["tex_file"])
         if md_content is None:
             failed += 1
             continue
 
-        # Clean up
-        md_content = clean_md(md_content, title, subtitle, published, updated)
+        md_content = clean_md(
+            md_content, title, info["subtitle"],
+            info["published"], info["updated"],
+            info["related_slugs"], slug_to_info,
+        )
 
-        # Write output — mirror the hierarchy in the output path
-        file_slug = slug(tex_file.name)
-        top_slug = slug(top_category)
-        if sub_category:
-            sub_slug = slug(sub_category)
+        top_slug = slug(info["top_category"])
+        if info["sub_category"]:
+            sub_slug = slug(info["sub_category"])
             out_dir = DOCS_DIR / top_slug / sub_slug
         else:
             out_dir = DOCS_DIR / top_slug
         out_dir.mkdir(parents=True, exist_ok=True)
-        out_path = out_dir / f"{file_slug}.md"
+        out_path = out_dir / f"{info['file_slug']}.md"
         out_path.write_text(md_content)
 
-        # Track for nav
-        nav_path = str(out_path.relative_to(Path("docs")))
+        nav_path = info["nav_path"]
+        top_category = info["top_category"]
+        sub_category = info["sub_category"]
         if top_category not in essay_tree:
             essay_tree[top_category] = {}
         if sub_category not in essay_tree[top_category]:
