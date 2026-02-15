@@ -372,6 +372,10 @@ def main():
         if not title or title == "Title":
             continue
 
+        # Only publish essays explicitly marked as ready
+        if not re.search(r"\\PublishReady\{yes\}", tex_content):
+            continue
+
         subtitle = extract_subtitle(tex_content)
         related_slugs = extract_related_essays(tex_content)
         published, updated = get_git_dates(rel)
