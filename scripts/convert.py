@@ -137,18 +137,65 @@ def slug(name: str) -> str:
     return s
 
 
-def build_nav(essay_map: dict) -> list:
-    """Build the nav structure for mkdocs.yml."""
-    nav_essays = []
-    for category in sorted(essay_map.keys()):
-        items = essay_map[category]
-        if len(items) == 1:
-            title, path = items[0]
-            nav_essays.append({title: path})
-        else:
-            cat_items = [{title: path} for title, path in sorted(items)]
-            nav_essays.append({category: cat_items})
-    return nav_essays
+def build_nav(essay_tree: dict) -> list:
+    """Build nested nav structure for mkdocs.yml from the essay tree.
+
+    essay_tree is: {top_category: {sub_or_none: [(title, path)]}}
+    """
+    nav = []
+    for top_cat in sorted(essay_tree.keys()):
+        subs = essay_tree[top_cat]
+        cat_items = []
+
+        # Articles directly under the top category (no subcategory)
+        if None in subs:
+            for title, path in sorted(subs[None]):
+                cat_items.append({title: path})
+
+        # Subcategories
+        for sub_cat in sorted(k for k in subs if k is not None):
+            sub_items = [{title: path} for title, path in sorted(subs[sub_cat])]
+            cat_items.append({sub_cat: sub_items})
+
+        nav.append({top_cat: cat_items})
+    return nav
+
+
+def generate_homepage(essay_tree: dict):
+    """Generate docs/index.md with a category-based table of contents."""
+    lines = [
+        "# James Oliver",
+        "",
+        "Finding simplicity in complexity.",
+        "",
+        "---",
+        "",
+    ]
+
+    for top_cat in sorted(essay_tree.keys()):
+        subs = essay_tree[top_cat]
+        total = sum(len(v) for v in subs.values())
+        lines.append(f"## {top_cat}")
+        lines.append("")
+
+        # Articles directly under the top category
+        if None in subs:
+            for title, path in sorted(subs[None]):
+                lines.append(f"- [{title}]({path})")
+
+        # Subcategories
+        for sub_cat in sorted(k for k in subs if k is not None):
+            lines.append(f"### {sub_cat}")
+            lines.append("")
+            for title, path in sorted(subs[sub_cat]):
+                lines.append(f"- [{title}]({path})")
+            lines.append("")
+
+        lines.append("")
+
+    homepage = Path("docs/index.md")
+    homepage.write_text("\n".join(lines))
+    print(f"Homepage generated with {len(essay_tree)} categories")
 
 
 def main():
@@ -158,9 +205,13 @@ def main():
         shutil.rmtree(DOCS_DIR)
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
-    essay_map = {}  # category -> [(title, relative_path)]
+    # essay_tree: {top_category: {subcategory_or_None: [(title, path)]}}
+    essay_tree = {}
     converted = 0
     failed = 0
+
+    # Rename map for cleaner display of top-level dirs
+    RENAME = {"1_Foundations": "Foundations"}
 
     for tex_file in sorted(PAPERS_DIR.rglob("*.tex")):
         rel = tex_file.relative_to(PAPERS_DIR)
@@ -188,10 +239,16 @@ def main():
         # Get git dates
         published, updated = get_git_dates(rel)
 
-        # Determine category from directory structure
-        category = parts[0]
+        # Determine category hierarchy from directory structure
+        top_category = RENAME.get(parts[0], parts[0])
+        sub_category = None
         if len(parts) > 2:
-            category = f"{parts[0]} / {parts[1]}"
+            # Has a subcategory folder
+            sub_category = parts[1]
+            # Handle deep nesting (e.g. Health/Metabolism/01_theory/...)
+            # Collapse to just the first subcategory level
+            if len(parts) > 3:
+                sub_category = parts[1]
 
         # Convert
         md_content = tex_to_md(tex_file)
@@ -202,31 +259,39 @@ def main():
         # Clean up
         md_content = clean_md(md_content, title, subtitle, published, updated)
 
-        # Write output
+        # Write output — mirror the hierarchy in the output path
         file_slug = slug(tex_file.name)
-        cat_slug = slug(category.replace(" / ", "-"))
-        out_dir = DOCS_DIR / cat_slug
+        top_slug = slug(top_category)
+        if sub_category:
+            sub_slug = slug(sub_category)
+            out_dir = DOCS_DIR / top_slug / sub_slug
+        else:
+            out_dir = DOCS_DIR / top_slug
         out_dir.mkdir(parents=True, exist_ok=True)
         out_path = out_dir / f"{file_slug}.md"
         out_path.write_text(md_content)
 
         # Track for nav
-        nav_path = f"essays/{cat_slug}/{file_slug}.md"
-        display_category = category.replace(" / ", " \u203a ")
-        if display_category not in essay_map:
-            essay_map[display_category] = []
-        essay_map[display_category].append((title, nav_path))
+        nav_path = str(out_path.relative_to(Path("docs")))
+        if top_category not in essay_tree:
+            essay_tree[top_category] = {}
+        if sub_category not in essay_tree[top_category]:
+            essay_tree[top_category][sub_category] = []
+        essay_tree[top_category][sub_category].append((title, nav_path))
 
         converted += 1
 
     print(f"\nConverted: {converted}, Failed: {failed}")
 
     # Write nav fragment for mkdocs.yml
-    nav_essays = build_nav(essay_map)
+    nav_essays = build_nav(essay_tree)
     nav_fragment = {"nav_essays": nav_essays}
-    nav_path = Path("docs/_nav.yml")
-    nav_path.write_text(yaml.dump(nav_fragment, default_flow_style=False, allow_unicode=True))
-    print(f"Nav fragment written to {nav_path}")
+    nav_fpath = Path("docs/_nav.yml")
+    nav_fpath.write_text(yaml.dump(nav_fragment, default_flow_style=False, allow_unicode=True))
+    print(f"Nav fragment written to {nav_fpath}")
+
+    # Generate homepage with category index
+    generate_homepage(essay_tree)
 
 
 if __name__ == "__main__":
