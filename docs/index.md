@@ -4,59 +4,59 @@ Finding simplicity in complexity.
 
 ---
 
-???+ "Biology"
+??? "Biology"
 
-    ???+ "Biomechanics"
+    ??? "Biomechanics"
 
         - [The Grim Reaper Shuffle](essays/biology/biomechanics/grim-reaper.md)
 
-    ???+ "Evolution"
+    ??? "Evolution"
 
         - [The Canine Anomaly](essays/biology/evolution/canine-anomaly.md)
 
 
-???+ "Business"
+??? "Business"
 
     - [The Binary Nature of Value Creation](essays/business/curators-creators.md)
 
 
-???+ "Civilization"
+??? "Civilization"
 
     - [Climate Volatility](essays/civilization/climate-chaos.md)
     - [Mobility or Extinction](essays/civilization/mobility-extinction.md)
     - [Staring Into The Abyss](essays/civilization/staring-abyss.md)
 
-    ???+ "Communication"
+    ??? "Communication"
 
         - [The Least-Friction Law (Least Friction Law)](essays/civilization/communication/least-friction-law.md)
         - [The Least-Friction Law (Metaphors)](essays/civilization/communication/metaphors.md)
         - [The War For Reality](essays/civilization/communication/war-for-reality.md)
 
-    ???+ "Education"
+    ??? "Education"
 
         - [Ivory Tower](essays/civilization/education/ivory-tower.md)
 
-    ???+ "Governance"
+    ??? "Governance"
 
         - [The United States of Code](essays/civilization/governance/us-of-code.md)
 
-    ???+ "Warfare"
+    ??? "Warfare"
 
         - [The Law of Oxygen](essays/civilization/warfare/law-of-oxygen.md)
 
 
-???+ "Economics"
+??? "Economics"
 
     - [Rethinking Money](essays/economics/agentic-wealth.md)
     - [The Freedom–Ownership Paradox](essays/economics/freedom-ownership.md)
     - [The Symptom Trap](essays/economics/symptom-trap.md)
 
-    ???+ "Finance"
+    ??? "Finance"
 
         - [Capital Velocity](essays/economics/finance/capital-velocity.md)
 
 
-???+ "Engineering"
+??? "Engineering"
 
     - [Collect or Release](essays/engineering/energy-generation.md)
     - [Renewable Energy Is Nuclear](essays/engineering/solar-is-nuclear.md)
@@ -66,7 +66,7 @@ Finding simplicity in complexity.
     - [The Ideal Gas Tautology](essays/engineering/ideal-gas.md)
 
 
-???+ "Epistemology"
+??? "Epistemology"
 
     - [Entropy $\neq$ Disorder](essays/epistemology/entropy-not-disorder.md)
     - [The Architectural Failure of Statistical Empiricism](essays/epistemology/faillure-of-empricicsm.md)
@@ -74,30 +74,30 @@ Finding simplicity in complexity.
     - [The Texture of Time](essays/epistemology/resolution-of-time.md)
     - [Why Logic Works](essays/epistemology/why-logic-works.md)
 
-    ???+ "Symbolic Systems"
+    ??? "Symbolic Systems"
 
         - [The Preservation Law](essays/epistemology/symbolic-systems/preservation-law.md)
         - [Why Language Must Be Hierarchical](essays/epistemology/symbolic-systems/language-hierarchy.md)
 
 
-???+ "Foundations"
+??? "Foundations"
 
     - [Integration Asymmetry (Intergration Asymmetry)](essays/foundations/intergration-asymmetry.md)
 
 
-???+ "Health"
+??? "Health"
 
-    ???+ "Disease"
+    ??? "Disease"
 
         - [Disease as Combinatorial Drift](essays/health/disease/entropic-disease.md)
 
-    ???+ "Medicine"
+    ??? "Medicine"
 
         - [Dose Paradox](essays/health/medicine/dose-paradox.md)
         - [Medication Orbit](essays/health/medicine/medication-orbit.md)
         - [Redefining Cancer](essays/health/medicine/redefining-cancer.md)
 
-    ???+ "Metabolism"
+    ??? "Metabolism"
 
         - [GLP-1 Receptor Agonists](essays/health/metabolism/glp-receptors.md)
         - [Mass Harm Without Malice](essays/health/metabolism/mass-harm.md)
@@ -109,17 +109,17 @@ Finding simplicity in complexity.
         - [The Particle Size Principle](essays/health/metabolism/21-particle-size.md)
 
 
-???+ "Psychology"
+??? "Psychology"
 
-    ???+ "Autism"
+    ??? "Autism"
 
         - [Emergent Morbidities in Undiagnosed Autism](essays/psychology/autism/undiagnosed-autism.md)
 
-    ???+ "Decision"
+    ??? "Decision"
 
         - [Therapy Debugging](essays/psychology/decision/therapy-debugging.md)
 
-    ???+ "Self Improvement"
+    ??? "Self Improvement"
 
         - [Integration Asymmetry (Ceiling Principle)](essays/psychology/self-improvement/ceiling-principle.md)
 

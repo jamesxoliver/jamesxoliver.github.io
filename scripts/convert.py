@@ -192,7 +192,7 @@ def generate_homepage(essay_tree: dict):
         subs = essay_tree[top_cat]
         total = sum(len(v) for v in subs.values())
 
-        lines.append(f'???+ "{top_cat}"')
+        lines.append(f'??? "{top_cat}"')
         lines.append("")
 
         # Articles directly under the top category
@@ -203,7 +203,7 @@ def generate_homepage(essay_tree: dict):
 
         # Subcategories as nested dropdowns
         for sub_cat in sorted(k for k in subs if k is not None):
-            lines.append(f'    ???+ "{sub_cat}"')
+            lines.append(f'    ??? "{sub_cat}"')
             lines.append("")
             for title, path in sorted(subs[sub_cat]):
                 lines.append(f"        - [{title}]({path})")
