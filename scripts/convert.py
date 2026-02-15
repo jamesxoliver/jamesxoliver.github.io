@@ -82,6 +82,33 @@ def tex_to_md(tex_path: Path) -> str | None:
     return result.stdout
 
 
+def extract_first_paragraph(md_content: str) -> str:
+    """Extract the first real paragraph from markdown content for meta description."""
+    for line in md_content.split("\n"):
+        line = line.strip()
+        # Skip headings, empty lines, metadata, images, lists
+        if not line or line.startswith("#") or line.startswith("!") or line.startswith("-"):
+            continue
+        if line.startswith("**") and ("james oliver" in line.lower() or "author" in line.lower()):
+            continue
+        if line.startswith("*") and line.endswith("*"):
+            continue
+        if line.startswith("<") or line.startswith(":::") or line.startswith("---"):
+            continue
+        # Clean markdown formatting for plain text description
+        desc = re.sub(r"\$[^$]+\$", "", line)  # remove inline math
+        desc = re.sub(r"\*\*(.+?)\*\*", r"\1", desc)  # bold
+        desc = re.sub(r"\*(.+?)\*", r"\1", desc)  # italic
+        desc = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", desc)  # links
+        desc = desc.strip()
+        if len(desc) > 30:
+            # Truncate to ~155 chars for meta description
+            if len(desc) > 155:
+                desc = desc[:152].rsplit(" ", 1)[0] + "..."
+            return desc
+    return ""
+
+
 def clean_md(md_content: str, title: str, subtitle: str | None,
              published: str | None = None, updated: str | None = None) -> str:
     """Clean up pandoc output for MkDocs."""
@@ -107,13 +134,37 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
 
     md = "\n".join(cleaned).strip()
 
-    # Build header
+    # Clean up pandoc artifacts
+    md = re.sub(r"\n{3,}", "\n\n", md)
+    md = re.sub(r"\s*\{#[^}]*\}", "", md)
+    md = re.sub(r"^:{2,}\s*tcolorbox\s*$", "", md, flags=re.MULTILINE)
+    md = re.sub(r"^:{2,}\s*$", "", md, flags=re.MULTILINE)
+    md = re.sub(r"\[@([a-zA-Z0-9_]+)\]", "", md)
+    md = re.sub(r"\\\\\s*$", "", md, flags=re.MULTILINE)
+    md = re.sub(r"\n{3,}", "\n\n", md)
+
+    # Extract meta description from first paragraph
+    description = extract_first_paragraph(md)
+    if not description and subtitle:
+        description = subtitle
+
+    # Build YAML front matter for SEO
+    front_matter = "---\n"
+    # Escape quotes in description/title for YAML
+    safe_desc = description.replace('"', '\\"') if description else ""
+    safe_title = title.replace('"', '\\"')
+    front_matter += f'description: "{safe_desc}"\n'
+    front_matter += f'author: "James Oliver"\n'
+    if published:
+        front_matter += f'date: {published}\n'
+    front_matter += "---\n\n"
+
+    # Build visible header
     header = f"# {title}\n\n"
     if subtitle:
         header += f"*{subtitle}*\n\n"
     header += "**James Oliver**"
 
-    # Add dates
     if published:
         date_line = f"Published: {published}"
         if updated and updated != published:
@@ -122,26 +173,7 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
 
     header += "\n"
 
-    # Clean up pandoc artifacts
-    md = re.sub(r"\n{3,}", "\n\n", md)
-
-    # Remove {#id .unnumbered} heading attributes
-    md = re.sub(r"\s*\{#[^}]*\}", "", md)
-
-    # Remove tcolorbox/LaTeX environment wrappers
-    md = re.sub(r"^:{2,}\s*tcolorbox\s*$", "", md, flags=re.MULTILINE)
-    md = re.sub(r"^:{2,}\s*$", "", md, flags=re.MULTILINE)
-
-    # Clean up raw citation references [@key] -> remove brackets
-    md = re.sub(r"\[@([a-zA-Z0-9_]+)\]", "", md)
-
-    # Remove leftover \\ line breaks from LaTeX
-    md = re.sub(r"\\\\\s*$", "", md, flags=re.MULTILINE)
-
-    # Clean up multiple blank lines again after removals
-    md = re.sub(r"\n{3,}", "\n\n", md)
-
-    return header + "\n---\n\n" + md + "\n"
+    return front_matter + header + "\n---\n\n" + md + "\n"
 
 
 def slug(name: str) -> str:

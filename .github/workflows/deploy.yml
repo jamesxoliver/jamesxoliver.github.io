@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mkdocs-material pyyaml
+          pip install mkdocs-material pyyaml ghp-import
           sudo apt-get update && sudo apt-get install -y pandoc
 
       - name: Clone papers repo
@@ -37,5 +37,11 @@ jobs:
       - name: Generate mkdocs.yml
         run: python scripts/build_config.py
 
+      - name: Build site
+        run: mkdocs build
+
+      - name: Inject SEO metadata
+        run: python scripts/inject_seo.py
+
       - name: Deploy to GitHub Pages
-        run: mkdocs gh-deploy --force
+        run: ghp-import -n -p -f site

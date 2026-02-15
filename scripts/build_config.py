@@ -16,9 +16,10 @@ def main():
     nav_essays = nav_data.get("nav_essays", [])
 
     config = {
-        "site_name": "Finding simplicity in complexity",
+        "site_name": "James Oliver",
         "site_url": "https://jamesxoliver.github.io",
-        "site_description": "Finding simplicity in complexity",
+        "site_description": "Essays on systems, science, and structure — finding simplicity in complexity.",
+        "site_author": "James Oliver",
         "theme": {
             "name": "material",
             "palette": [
@@ -60,6 +61,10 @@ def main():
             "attr_list",
             "md_in_html",
             {"toc": {"permalink": True}},
+            "meta",
+        ],
+        "plugins": [
+            "search",
         ],
         "extra_css": [
             "stylesheets/extra.css",
@@ -69,6 +74,9 @@ def main():
         ],
         "extra": {
             "generator": False,
+            "social": [
+                {"icon": "fontawesome/brands/github", "link": "https://github.com/jamesxoliver"},
+            ],
         },
     }
 
