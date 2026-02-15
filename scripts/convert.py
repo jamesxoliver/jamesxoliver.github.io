@@ -251,8 +251,8 @@ def build_nav(essay_tree: dict) -> list:
     return nav
 
 
-def generate_homepage(essay_tree: dict):
-    """Generate docs/index.md with collapsible category sections."""
+def generate_homepage(essay_tree: dict, essays: list):
+    """Generate docs/index.md with recent section and collapsible categories."""
     lines = [
         "# James Oliver",
         "",
@@ -261,6 +261,20 @@ def generate_homepage(essay_tree: dict):
         "---",
         "",
     ]
+
+    # Recent essays — top 5 by date
+    dated = [e for e in essays if e.get("published")]
+    dated.sort(key=lambda e: e["published"], reverse=True)
+    recent = dated[:5]
+
+    if recent:
+        lines.append("**Recent**")
+        lines.append("")
+        for e in recent:
+            lines.append(f"- [{e['title']}]({e['nav_path']}) <small>{e['published']}</small>")
+        lines.append("")
+        lines.append("---")
+        lines.append("")
 
     for top_cat in sorted(essay_tree.keys()):
         subs = essay_tree[top_cat]
@@ -439,7 +453,7 @@ def main():
     print(f"Nav fragment written to {nav_fpath}")
 
     # Generate homepage with category index
-    generate_homepage(essay_tree)
+    generate_homepage(essay_tree, essays)
 
 
 if __name__ == "__main__":
