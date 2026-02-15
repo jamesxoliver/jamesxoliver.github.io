@@ -1,19 +1,41 @@
-name: Deploy MkDocs
+name: Build and Deploy
 
 on:
   push:
     branches: [main]
+  repository_dispatch:
+    types: [papers-updated]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install mkdocs-material
-      - run: mkdocs gh-deploy --force
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material pyyaml
+          sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Clone papers repo
+        run: |
+          git clone https://${{ secrets.PAPERS_TOKEN }}@github.com/jamesxoliver/papers.git papers
+
+      - name: Convert tex to markdown
+        env:
+          PAPERS_DIR: papers
+        run: python scripts/convert.py
+
+      - name: Generate mkdocs.yml
+        run: python scripts/build_config.py
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force

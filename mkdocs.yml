@@ -20,13 +20,12 @@ theme:
     code: JetBrains Mono
   features:
     - navigation.sections
+    - navigation.expand
     - search.suggest
     - search.highlight
 
 nav:
   - Home: index.md
-  - Essays:
-    - The Asymptotic Optimality of Geodesic Domes: essays/geodesic-domes.md
 
 markdown_extensions:
   - tables
