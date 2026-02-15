@@ -15,7 +15,7 @@ SITE_URL = "https://jamesxoliver.github.io"
 #   SEARCH_CONSOLE_VERIFICATION = "your-verification-code-here"
 # Then inject_seo.py will add <meta name="google-site-verification" content="...">
 # to every page. Leave as None to skip.
-SEARCH_CONSOLE_VERIFICATION = None
+SEARCH_CONSOLE_VERIFICATION = "Cm624WsCoCiwmhsfLdbV-yrMIAtb4R9b6QUa_aG3K_Q"
 
 
 def extract_meta(html: str) -> dict:
