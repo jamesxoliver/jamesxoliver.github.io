@@ -106,15 +106,23 @@ markdown_extensions:
 - md_in_html
 - toc:
     permalink: true
+- pymdownx.emoji:
+    emoji_index: !!python/name:material.extensions.emoji.twemoji
+    emoji_generator: !!python/name:material.extensions.emoji.to_svg
 - meta
 plugins:
 - search
 extra_css:
 - stylesheets/extra.css
 extra_javascript:
+- javascripts/mathjax.js
 - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 extra:
   generator: false
   social:
   - icon: fontawesome/brands/github
     link: https://github.com/jamesxoliver
+  - icon: fontawesome/brands/orcid
+    link: https://orcid.org/0009-0003-9912-095X
+  - icon: simple/zenodo
+    link: https://zenodo.org/communities/jamesoliver/records

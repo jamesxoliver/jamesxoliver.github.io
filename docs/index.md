@@ -4,6 +4,16 @@ Finding simplicity in complexity.
 
 ---
 
+**Recent**
+
+- [Integration Asymmetry](essays/foundations/intergration-asymmetry.md) <small>2026-02-15</small>
+- [The Grim Reaper Shuffle](essays/biology/biomechanics/grim-reaper.md) <small>2026-02-15</small>
+- [The Canine Anomaly](essays/biology/evolution/canine-anomaly.md) <small>2026-02-15</small>
+- [The Binary Nature of Value Creation](essays/business/curators-creators.md) <small>2026-02-15</small>
+- [The Least-Friction Law](essays/civilization/communication/least-friction-law.md) <small>2026-02-15</small>
+
+---
+
 ??? "Biology"
 
     ??? "Biomechanics"
