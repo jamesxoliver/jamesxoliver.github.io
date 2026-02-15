@@ -69,7 +69,7 @@ def tex_to_md(tex_path: Path) -> str | None:
             "pandoc",
             str(tex_path),
             "-f", "latex",
-            "-t", "markdown",
+            "-t", "markdown-simple_tables-multiline_tables-grid_tables",
             "--wrap=none",
             "--markdown-headings=atx",
             "--shift-heading-level-by=1",
@@ -171,6 +171,15 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
 
     # Fix em dashes: triple hyphens between words → —
     md = re.sub(r"(?<=\w)---(?=\w)", "\u2014", md)
+
+    # Fix escaped quotes from pandoc
+    md = md.replace('\\"', '"')
+
+    # Remove stray \\ line breaks (mid-text, not in math)
+    md = re.sub(r"(?<!\$)\\\\(?!\$)", " ", md)
+
+    # Convert table captions to italic text below table
+    md = re.sub(r"^: (.+)$", r"*\1*", md, flags=re.MULTILINE)
 
     # Collapse blank lines between list items
     prev = None
