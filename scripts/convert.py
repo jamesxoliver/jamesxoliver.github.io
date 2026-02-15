@@ -258,6 +258,10 @@ def generate_homepage(essay_tree: dict, essays: list):
         "",
         "Finding simplicity in complexity.",
         "",
+        "[:fontawesome-brands-github:](https://github.com/jamesxoliver){ .profile-link title=\"GitHub\" } &nbsp; "
+        "[:fontawesome-brands-orcid:](https://orcid.org/0009-0003-9912-095X){ .profile-link title=\"ORCID\" } &nbsp; "
+        "[:simple-zenodo:](https://zenodo.org/communities/jamesoliver/records){ .profile-link title=\"Zenodo\" }",
+        "",
         "---",
         "",
     ]

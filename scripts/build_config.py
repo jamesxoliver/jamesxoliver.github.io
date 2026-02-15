@@ -61,6 +61,7 @@ def main():
             "attr_list",
             "md_in_html",
             {"toc": {"permalink": True}},
+            "pymdownx.emoji",
             "meta",
         ],
         "plugins": [
@@ -76,13 +77,23 @@ def main():
             "generator": False,
             "social": [
                 {"icon": "fontawesome/brands/github", "link": "https://github.com/jamesxoliver"},
+                {"icon": "fontawesome/brands/orcid", "link": "https://orcid.org/0009-0003-9912-095X"},
+                {"icon": "simple/zenodo", "link": "https://zenodo.org/communities/jamesoliver/records"},
             ],
         },
     }
 
-    Path("mkdocs.yml").write_text(
-        yaml.dump(config, default_flow_style=False, allow_unicode=True, sort_keys=False)
+    yml_text = yaml.dump(config, default_flow_style=False, allow_unicode=True, sort_keys=False)
+
+    # Replace pymdownx.emoji string entry with full config block (YAML tags can't go through yaml.dump)
+    yml_text = yml_text.replace(
+        "- pymdownx.emoji\n",
+        "- pymdownx.emoji:\n"
+        "    emoji_index: !!python/name:material.extensions.emoji.twemoji\n"
+        "    emoji_generator: !!python/name:material.extensions.emoji.to_svg\n",
     )
+
+    Path("mkdocs.yml").write_text(yml_text)
     print("mkdocs.yml generated")
 
 

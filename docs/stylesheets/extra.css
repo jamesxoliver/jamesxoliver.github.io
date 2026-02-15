@@ -100,6 +100,16 @@
   display: none;
 }
 
+/* Homepage profile links */
+.md-typeset a.profile-link {
+  color: var(--md-default-fg-color--light);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.md-typeset a.profile-link:hover {
+  color: var(--md-primary-fg-color);
+}
+
 /* Remove icon from details/admonition dropdowns */
 .md-typeset details > summary::before,
 .md-typeset .admonition > summary::before {
