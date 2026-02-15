@@ -12,6 +12,33 @@ DOCS_DIR = Path("docs/essays")
 SKIP_DIRS = {"0_Format"}
 
 
+def get_git_dates(tex_path: Path) -> tuple[str | None, str | None]:
+    """Get first commit date (published) and last commit date (updated) from git log."""
+    try:
+        # First commit date (published)
+        result = subprocess.run(
+            ["git", "log", "--diff-filter=A", "--follow", "--format=%aI", "--", str(tex_path)],
+            capture_output=True, text=True, cwd=PAPERS_DIR,
+        )
+        published = None
+        if result.returncode == 0 and result.stdout.strip():
+            dates = result.stdout.strip().split("\n")
+            published = dates[-1][:10]  # earliest date, YYYY-MM-DD
+
+        # Last commit date (updated)
+        result = subprocess.run(
+            ["git", "log", "-1", "--format=%aI", "--", str(tex_path)],
+            capture_output=True, text=True, cwd=PAPERS_DIR,
+        )
+        updated = None
+        if result.returncode == 0 and result.stdout.strip():
+            updated = result.stdout.strip()[:10]
+
+        return published, updated
+    except Exception:
+        return None, None
+
+
 def extract_title(tex_content: str) -> str:
     """Extract the document title from \\newcommand{\\DocumentTitle}{...}."""
     match = re.search(r"\\newcommand\{\\DocumentTitle\}\{(.+?)\}", tex_content)
@@ -55,7 +82,8 @@ def tex_to_md(tex_path: Path) -> str | None:
     return result.stdout
 
 
-def clean_md(md_content: str, title: str, subtitle: str | None) -> str:
+def clean_md(md_content: str, title: str, subtitle: str | None,
+             published: str | None = None, updated: str | None = None) -> str:
     """Clean up pandoc output for MkDocs."""
     lines = md_content.split("\n")
     cleaned = []
@@ -80,9 +108,19 @@ def clean_md(md_content: str, title: str, subtitle: str | None) -> str:
     md = "\n".join(cleaned).strip()
 
     # Build header
-    header = f"# {title}\n\n**James Oliver**\n"
+    header = f"# {title}\n\n"
     if subtitle:
-        header = f"# {title}\n\n*{subtitle}*\n\n**James Oliver**\n"
+        header += f"*{subtitle}*\n\n"
+    header += "**James Oliver**"
+
+    # Add dates
+    if published:
+        date_line = f"Published: {published}"
+        if updated and updated != published:
+            date_line += f" · Updated: {updated}"
+        header += f"  \n<small>{date_line}</small>"
+
+    header += "\n"
 
     # Clean up some common pandoc artifacts
     md = re.sub(r"\n{3,}", "\n\n", md)
@@ -147,6 +185,9 @@ def main():
 
         subtitle = extract_subtitle(tex_content)
 
+        # Get git dates
+        published, updated = get_git_dates(rel)
+
         # Determine category from directory structure
         category = parts[0]
         if len(parts) > 2:
@@ -159,7 +200,7 @@ def main():
             continue
 
         # Clean up
-        md_content = clean_md(md_content, title, subtitle)
+        md_content = clean_md(md_content, title, subtitle, published, updated)
 
         # Write output
         file_slug = slug(tex_file.name)
