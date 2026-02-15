@@ -93,3 +93,13 @@
 .md-header__topic .md-ellipsis {
   display: none;
 }
+
+/* Remove icon from details/admonition dropdowns */
+.md-typeset details > summary::before,
+.md-typeset .admonition > summary::before {
+  display: none !important;
+}
+.md-typeset details > summary,
+.md-typeset .admonition > summary {
+  padding-left: 0.6rem;
+}
