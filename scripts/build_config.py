@@ -64,6 +64,9 @@ def main():
         "extra_javascript": [
             "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
         ],
+        "extra": {
+            "generator": False,
+        },
     }
 
     Path("mkdocs.yml").write_text(
