@@ -372,8 +372,8 @@ def main():
         if not title or title == "Title":
             continue
 
-        # Only publish essays explicitly marked as ready
-        if not re.search(r"\\PublishReady\{yes\}", tex_content):
+        # Only publish essays explicitly marked as ready (via LaTeX comment)
+        if not re.search(r"^%\s*PublishReady:\s*yes", tex_content, re.MULTILINE):
             continue
 
         subtitle = extract_subtitle(tex_content)
