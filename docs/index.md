@@ -4,116 +4,122 @@ Finding simplicity in complexity.
 
 ---
 
-## Biology
+???+ "Biology"
 
-### Biomechanics
+    ???+ "Biomechanics"
 
-- [The Grim Reaper Shuffle](essays/biology/biomechanics/grim-reaper.md)
+        - [The Grim Reaper Shuffle](essays/biology/biomechanics/grim-reaper.md)
 
-### Evolution
+    ???+ "Evolution"
 
-- [The Canine Anomaly](essays/biology/evolution/canine-anomaly.md)
-
-
-## Business
-
-- [The Binary Nature of Value Creation](essays/business/curators-creators.md)
-
-## Civilization
-
-- [Climate Volatility](essays/civilization/climate-chaos.md)
-- [Mobility or Extinction](essays/civilization/mobility-extinction.md)
-- [Staring Into The Abyss](essays/civilization/staring-abyss.md)
-### Communication
-
-- [The Least-Friction Law (Least Friction Law)](essays/civilization/communication/least-friction-law.md)
-- [The Least-Friction Law (Metaphors)](essays/civilization/communication/metaphors.md)
-- [The War For Reality](essays/civilization/communication/war-for-reality.md)
-
-### Education
-
-- [Ivory Tower](essays/civilization/education/ivory-tower.md)
-
-### Governance
-
-- [The United States of Code](essays/civilization/governance/us-of-code.md)
-
-### Warfare
-
-- [The Law of Oxygen](essays/civilization/warfare/law-of-oxygen.md)
+        - [The Canine Anomaly](essays/biology/evolution/canine-anomaly.md)
 
 
-## Economics
+???+ "Business"
 
-- [Rethinking Money](essays/economics/agentic-wealth.md)
-- [The Freedom–Ownership Paradox](essays/economics/freedom-ownership.md)
-- [The Symptom Trap](essays/economics/symptom-trap.md)
-### Finance
-
-- [Capital Velocity](essays/economics/finance/capital-velocity.md)
+    - [The Binary Nature of Value Creation](essays/business/curators-creators.md)
 
 
-## Engineering
+???+ "Civilization"
 
-- [Collect or Release](essays/engineering/energy-generation.md)
-- [Renewable Energy Is Nuclear](essays/engineering/solar-is-nuclear.md)
-- [The Area-Energy Principle](essays/engineering/surface-area.md)
-- [The Asymptotic Optimality of Geodesic Domes](essays/engineering/geodesic-domes.md)
-- [The Asymptotic Optimality of Rail Transport](essays/engineering/rail-transport.md)
-- [The Ideal Gas Tautology](essays/engineering/ideal-gas.md)
+    - [Climate Volatility](essays/civilization/climate-chaos.md)
+    - [Mobility or Extinction](essays/civilization/mobility-extinction.md)
+    - [Staring Into The Abyss](essays/civilization/staring-abyss.md)
 
-## Epistemology
+    ???+ "Communication"
 
-- [Entropy $\neq$ Disorder](essays/epistemology/entropy-not-disorder.md)
-- [The Architectural Failure of Statistical Empiricism](essays/epistemology/faillure-of-empricicsm.md)
-- [The Blind Turkey](essays/epistemology/blind-turkey.md)
-- [The Texture of Time](essays/epistemology/resolution-of-time.md)
-- [Why Logic Works](essays/epistemology/why-logic-works.md)
-### Symbolic Systems
+        - [The Least-Friction Law (Least Friction Law)](essays/civilization/communication/least-friction-law.md)
+        - [The Least-Friction Law (Metaphors)](essays/civilization/communication/metaphors.md)
+        - [The War For Reality](essays/civilization/communication/war-for-reality.md)
 
-- [The Preservation Law](essays/epistemology/symbolic-systems/preservation-law.md)
-- [Why Language Must Be Hierarchical](essays/epistemology/symbolic-systems/language-hierarchy.md)
+    ???+ "Education"
 
+        - [Ivory Tower](essays/civilization/education/ivory-tower.md)
 
-## Foundations
+    ???+ "Governance"
 
-- [Integration Asymmetry (Intergration Asymmetry)](essays/foundations/intergration-asymmetry.md)
+        - [The United States of Code](essays/civilization/governance/us-of-code.md)
 
-## Health
+    ???+ "Warfare"
 
-### Disease
-
-- [Disease as Combinatorial Drift](essays/health/disease/entropic-disease.md)
-
-### Medicine
-
-- [Dose Paradox](essays/health/medicine/dose-paradox.md)
-- [Medication Orbit](essays/health/medicine/medication-orbit.md)
-- [Redefining Cancer](essays/health/medicine/redefining-cancer.md)
-
-### Metabolism
-
-- [GLP-1 Receptor Agonists](essays/health/metabolism/glp-receptors.md)
-- [Mass Harm Without Malice](essays/health/metabolism/mass-harm.md)
-- [Protective Eating](essays/health/metabolism/protective-eating.md)
-- [Protective Nutrition](essays/health/metabolism/protective-nutrition.md)
-- [System Failure](essays/health/metabolism/system-failure.md)
-- [The Asymmetry of Glucose (Glucose Asymmetry)](essays/health/metabolism/glucose-asymmetry.md)
-- [The Asymmetry of Glucose (Glucose1)](essays/health/metabolism/glucose1.md)
-- [The Particle Size Principle](essays/health/metabolism/21-particle-size.md)
+        - [The Law of Oxygen](essays/civilization/warfare/law-of-oxygen.md)
 
 
-## Psychology
+???+ "Economics"
 
-### Autism
+    - [Rethinking Money](essays/economics/agentic-wealth.md)
+    - [The Freedom–Ownership Paradox](essays/economics/freedom-ownership.md)
+    - [The Symptom Trap](essays/economics/symptom-trap.md)
 
-- [Emergent Morbidities in Undiagnosed Autism](essays/psychology/autism/undiagnosed-autism.md)
+    ???+ "Finance"
 
-### Decision
+        - [Capital Velocity](essays/economics/finance/capital-velocity.md)
 
-- [Therapy Debugging](essays/psychology/decision/therapy-debugging.md)
 
-### Self Improvement
+???+ "Engineering"
 
-- [Integration Asymmetry (Ceiling Principle)](essays/psychology/self-improvement/ceiling-principle.md)
+    - [Collect or Release](essays/engineering/energy-generation.md)
+    - [Renewable Energy Is Nuclear](essays/engineering/solar-is-nuclear.md)
+    - [The Area-Energy Principle](essays/engineering/surface-area.md)
+    - [The Asymptotic Optimality of Geodesic Domes](essays/engineering/geodesic-domes.md)
+    - [The Asymptotic Optimality of Rail Transport](essays/engineering/rail-transport.md)
+    - [The Ideal Gas Tautology](essays/engineering/ideal-gas.md)
+
+
+???+ "Epistemology"
+
+    - [Entropy $\neq$ Disorder](essays/epistemology/entropy-not-disorder.md)
+    - [The Architectural Failure of Statistical Empiricism](essays/epistemology/faillure-of-empricicsm.md)
+    - [The Blind Turkey](essays/epistemology/blind-turkey.md)
+    - [The Texture of Time](essays/epistemology/resolution-of-time.md)
+    - [Why Logic Works](essays/epistemology/why-logic-works.md)
+
+    ???+ "Symbolic Systems"
+
+        - [The Preservation Law](essays/epistemology/symbolic-systems/preservation-law.md)
+        - [Why Language Must Be Hierarchical](essays/epistemology/symbolic-systems/language-hierarchy.md)
+
+
+???+ "Foundations"
+
+    - [Integration Asymmetry (Intergration Asymmetry)](essays/foundations/intergration-asymmetry.md)
+
+
+???+ "Health"
+
+    ???+ "Disease"
+
+        - [Disease as Combinatorial Drift](essays/health/disease/entropic-disease.md)
+
+    ???+ "Medicine"
+
+        - [Dose Paradox](essays/health/medicine/dose-paradox.md)
+        - [Medication Orbit](essays/health/medicine/medication-orbit.md)
+        - [Redefining Cancer](essays/health/medicine/redefining-cancer.md)
+
+    ???+ "Metabolism"
+
+        - [GLP-1 Receptor Agonists](essays/health/metabolism/glp-receptors.md)
+        - [Mass Harm Without Malice](essays/health/metabolism/mass-harm.md)
+        - [Protective Eating](essays/health/metabolism/protective-eating.md)
+        - [Protective Nutrition](essays/health/metabolism/protective-nutrition.md)
+        - [System Failure](essays/health/metabolism/system-failure.md)
+        - [The Asymmetry of Glucose (Glucose Asymmetry)](essays/health/metabolism/glucose-asymmetry.md)
+        - [The Asymmetry of Glucose (Glucose1)](essays/health/metabolism/glucose1.md)
+        - [The Particle Size Principle](essays/health/metabolism/21-particle-size.md)
+
+
+???+ "Psychology"
+
+    ???+ "Autism"
+
+        - [Emergent Morbidities in Undiagnosed Autism](essays/psychology/autism/undiagnosed-autism.md)
+
+    ???+ "Decision"
+
+        - [Therapy Debugging](essays/psychology/decision/therapy-debugging.md)
+
+    ???+ "Self Improvement"
+
+        - [Integration Asymmetry (Ceiling Principle)](essays/psychology/self-improvement/ceiling-principle.md)
 
