@@ -88,3 +88,8 @@
 .md-nav {
   font-size: 0.72rem;
 }
+
+/* Hide site name in header */
+.md-header__topic .md-ellipsis {
+  display: none;
+}
