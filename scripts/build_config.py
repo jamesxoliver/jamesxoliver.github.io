@@ -49,8 +49,7 @@ def main():
         },
         "nav": [
             {"Home": "index.md"},
-            {"Essays": nav_essays},
-        ],
+        ] + nav_essays,
         "markdown_extensions": [
             "tables",
             "admonition",
