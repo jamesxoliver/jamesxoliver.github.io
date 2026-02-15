@@ -72,6 +72,7 @@ def tex_to_md(tex_path: Path) -> str | None:
             "-t", "markdown",
             "--wrap=none",
             "--markdown-headings=atx",
+            "--shift-heading-level-by=1",
         ],
         capture_output=True,
         text=True,
@@ -167,6 +168,16 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
     md = re.sub(r"\[@([a-zA-Z0-9_]+)\]", "", md)
     md = re.sub(r"\\\\\s*$", "", md, flags=re.MULTILINE)
     md = re.sub(r"\n{3,}", "\n\n", md)
+
+    # Fix em dashes: triple hyphens between words → —
+    md = re.sub(r"(?<=\w)---(?=\w)", "\u2014", md)
+
+    # Collapse blank lines between list items
+    prev = None
+    while prev != md:
+        prev = md
+        md = re.sub(r"(\n-   .+)\n\n(-   )", r"\1\n\2", md)
+        md = re.sub(r"(\n\d+\.\s+.+)\n\n(\d+\.\s+)", r"\1\n\2", md)
 
     # Extract meta description from first paragraph
     description = extract_first_paragraph(md)
