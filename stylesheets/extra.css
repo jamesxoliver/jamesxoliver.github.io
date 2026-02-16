@@ -1,0 +1,113 @@
+/* Constrain content width for readability */
+.md-content {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+/* Typography — tighten body text */
+.md-typeset {
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+/* Headings — clear hierarchy with spacing */
+.md-typeset h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+  margin-bottom: 0.4em;
+}
+
+.md-typeset h2 {
+  font-weight: 600;
+  margin-top: 2.4em;
+  margin-bottom: 0.6em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset h3 {
+  font-weight: 600;
+  margin-top: 1.8em;
+  margin-bottom: 0.4em;
+}
+
+/* Paragraphs — breathing room */
+.md-typeset p {
+  margin-bottom: 1.2em;
+}
+
+/* Lists — tighter */
+.md-typeset li {
+  margin-bottom: 0.3em;
+}
+
+/* Math blocks — center with padding */
+.md-typeset .MathJax {
+  overflow-x: auto;
+}
+
+.md-typeset mjx-container[display="true"] {
+  margin: 1.6em 0;
+  padding: 0.8em 0;
+}
+
+/* Article metadata (subtitle, author, date) */
+.md-typeset small {
+  color: var(--md-default-fg-color--light);
+}
+
+/* Horizontal rule after header */
+.md-typeset hr {
+  margin: 1.2em 0 1.8em 0;
+  border-color: var(--md-default-fg-color--lightest);
+}
+
+/* Blockquotes — subtle left bar */
+.md-typeset blockquote {
+  border-left: 3px solid var(--md-primary-fg-color);
+  padding-left: 1em;
+  color: var(--md-default-fg-color--light);
+  font-style: italic;
+}
+
+/* Homepage category index — cleaner spacing */
+.md-typeset h2 + ul,
+.md-typeset h3 + ul {
+  margin-top: 0.2em;
+}
+
+/* Tables — centered, don't stretch full width */
+.md-typeset table:not([class]) {
+  display: table;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.82rem;
+}
+
+/* Navigation sidebar — slightly smaller text */
+.md-nav {
+  font-size: 0.72rem;
+}
+
+/* Hide site name everywhere (header + sidebar) */
+.md-header__topic .md-ellipsis {
+  display: none;
+}
+.md-nav--primary > .md-nav__title {
+  display: none;
+}
+.md-logo {
+  display: none;
+}
+
+/* Remove icon from details/admonition dropdowns */
+.md-typeset details > summary::before,
+.md-typeset .admonition > summary::before {
+  display: none !important;
+}
+.md-typeset details > summary,
+.md-typeset .admonition > summary {
+  padding-left: 0.6rem;
+}
