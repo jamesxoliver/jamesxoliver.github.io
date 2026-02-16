@@ -165,8 +165,16 @@ def clean_md(md_content: str, title: str, subtitle: str | None,
     md = re.sub(r"\s*\{#[^}]*\}", "", md)
     md = re.sub(r"^:{2,}\s*tcolorbox\s*$", "", md, flags=re.MULTILINE)
     md = re.sub(r"^:{2,}\s*$", "", md, flags=re.MULTILINE)
-    md = re.sub(r"\[@([a-zA-Z0-9_]+)\]", "", md)
+    md = re.sub(r"\[(@[a-zA-Z0-9_-]+[;,\s]*)+\]", "", md)
     md = re.sub(r"\\\\\s*$", "", md, flags=re.MULTILINE)
+
+    # Convert thebibliography environment to References heading
+    md = re.sub(r"^::: thebibliography\n\d+\n*", "\n## References\n\n", md, flags=re.MULTILINE)
+
+    # Clean up orphan spaces before punctuation (left by removed citations)
+    md = re.sub(r" +\.", ".", md)
+    md = re.sub(r" +,", ",", md)
+
     md = re.sub(r"\n{3,}", "\n\n", md)
 
     # Fix em dashes: triple hyphens between words → —
